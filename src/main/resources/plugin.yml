@@ -1,0 +1,6 @@
+name: WorldBorder
+version: '${project.version}'
+main: com.lrsvmb.WorldBorder
+api-version: 1.19
+commands:
+  wb:
