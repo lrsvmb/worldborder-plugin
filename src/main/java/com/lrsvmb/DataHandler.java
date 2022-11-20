@@ -6,4 +6,6 @@ public class DataHandler {
     public static int expansionAmount = 2;
     public static int shrinkAmount = 1;
     public static boolean doOfflineCycle = false;
+
+    public static boolean dayState = false;
 }

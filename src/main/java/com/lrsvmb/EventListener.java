@@ -1,5 +1,6 @@
 package com.lrsvmb;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -10,10 +11,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+
+import java.util.logging.Level;
 
 public class EventListener implements Listener {
-
-    private boolean changed = false;
 
     public EventListener(JavaPlugin p) {
         p.getServer().getPluginManager().registerEvents(this, p);
@@ -26,8 +29,18 @@ public class EventListener implements Listener {
             p.sendMessage(ChatColor.RED + DataHandler.shrinkMessage);
         }
         world.getWorldBorder().setSize(world.getWorldBorder().getSize() - DataHandler.shrinkAmount, 2);
-        int score = event.getPlayer().getScoreboard().getObjective("Erweitert").getScore("Blöcke").getScore();
-        event.getPlayer().getScoreboard().getObjective("Erweitert").getScore("Blöcke").setScore(score - 1);
+        try {
+            Objective objective = event.getPlayer().getScoreboard().getObjective("Erweitert");
+            if(objective != null) {
+                Score score = objective.getScore("Blöcke");
+                score.setScore(score.getScore() - DataHandler.shrinkAmount);
+            } else {
+                Bukkit.getLogger().log(Level.WARNING, "Objective 'Erweitert' not found.");
+            }
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, e.toString());
+        }
+
     }
 
     @EventHandler
@@ -45,15 +58,24 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onNewDay(NewDayEvent event) {
-        if(event.getWorld().getPlayerCount() == 0) return;
+        if(event.getWorld().getPlayerCount() <= 1) return;
+        Bukkit.getLogger().info("Neuer Tag!");
         double size = event.getWorld().getWorldBorder().getSize();
-        event.getWorld().getWorldBorder().setSize(size + 2, 2);
-        Player player = null;
+        event.getWorld().getWorldBorder().setSize(size + DataHandler.expansionAmount, 2);
         for (Player p : event.getWorld().getPlayers()) {
             p.sendMessage(ChatColor.GOLD + DataHandler.expansionMessage);
-            player = p;
         }
-        int score = player.getScoreboard().getObjective("Erweitert").getScore("Blöcke").getScore();
-        player.getScoreboard().getObjective("Erweitert").getScore("Blöcke").setScore(score + 2);
+        Player player = (Player) event.getWorld().getPlayers().toArray()[0];
+        try {
+            Objective objective = player.getScoreboard().getObjective("Erweitert");
+            if(objective != null) {
+                Score score = objective.getScore("Blöcke");
+                score.setScore(score.getScore() + DataHandler.expansionAmount);
+            } else {
+                Bukkit.getLogger().log(Level.WARNING, "Objective 'Erweitert' not found.");
+            }
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, e.toString());
+        }
     }
 }
