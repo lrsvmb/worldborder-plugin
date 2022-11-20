@@ -5,6 +5,9 @@
 *.ipr
 *.iws
 
+# IntelliJ
+out/
+
 # Compiled class file
 *.class
 
