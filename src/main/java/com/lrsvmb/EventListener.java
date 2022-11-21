@@ -24,6 +24,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        Bukkit.getLogger().info("World shrinks...");
         World world = event.getPlayer().getWorld();
         for (Player p: world.getPlayers()) {
             p.sendMessage(ChatColor.RED + DataHandler.shrinkMessage);
@@ -58,9 +59,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onNewDay(NewDayEvent event) {
-        Bukkit.getLogger().info("Trying new day...");
         if(event.getWorld().getPlayerCount() <= 1) return;
-        Bukkit.getLogger().info("New day success!");
+        Bukkit.getLogger().info("New day!");
         double size = event.getWorld().getWorldBorder().getSize();
         event.getWorld().getWorldBorder().setSize(size + DataHandler.expansionAmount, 2);
         for (Player p : event.getWorld().getPlayers()) {
