@@ -58,8 +58,9 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onNewDay(NewDayEvent event) {
+        Bukkit.getLogger().info("Trying new day...");
         if(event.getWorld().getPlayerCount() <= 1) return;
-        Bukkit.getLogger().info("Neuer Tag!");
+        Bukkit.getLogger().info("New day success!");
         double size = event.getWorld().getWorldBorder().getSize();
         event.getWorld().getWorldBorder().setSize(size + DataHandler.expansionAmount, 2);
         for (Player p : event.getWorld().getPlayers()) {
